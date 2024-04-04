@@ -1,5 +1,6 @@
 import os
 import subprocess
+import time
 from colorama import *
 
 
@@ -11,6 +12,7 @@ def check_paths(main_path: str, paths: list[str]):
 
     print(Fore.MAGENTA + 'Список записей:' + Style.RESET_ALL)
     for path in true_paths:
+        time.sleep(1.2)
         print('\t' + Fore.GREEN + path + Style.RESET_ALL)
 
     return true_paths
@@ -38,11 +40,14 @@ def process_exists(process_name: str):
 
 
 def start_dot_zoom(main_path: str, paths: list[str]):
+    t0 = time.process_time()
     process_name = 'zTscoder.exe'
     dot_zoom_files = search_dot_zoom(main_path, paths)
     os.startfile(dot_zoom_files.pop())
+
     print()
     print(Fore.BLUE + 'Подождите, идёт конвертация' + Style.RESET_ALL)
+
     while True:
         if process_exists(process_name):
             continue
@@ -52,3 +57,6 @@ def start_dot_zoom(main_path: str, paths: list[str]):
             else:
                 print(Fore.GREEN + 'Конвертация завершена!' + Style.RESET_ALL)
                 break
+
+    t1 = time.process_time()
+    print(Fore.BLUE + f'Затрачено времени: {t1 - t0} сек.' + Style.RESET_ALL)
