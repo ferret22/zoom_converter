@@ -16,7 +16,7 @@ def program_cycle():
 
         if os.path.exists(ans):
             paths = os.listdir(ans)
-            print()
+            conversion_starter.start_dot_zoom(ans, paths)
         else:
             print(Fore.RED + 'Неверный ввод!' + Style.RESET_ALL)
             continue
