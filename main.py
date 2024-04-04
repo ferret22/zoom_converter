@@ -1,9 +1,15 @@
 import os
+from colorama import *
+import conversion_starter
+
+
+init(autoreset=True)
 
 
 def program_cycle():
     while True:
-        ans = input('Введите путь до папки с папками записей(n - для выхода): ')
+        ans = input('Введите путь до папки с папками записей(n - для выхода):' + Fore.GREEN + ' ')
+        print(Style.RESET_ALL)
         if ans == 'n':
             print('До свидания!')
             break
@@ -11,10 +17,8 @@ def program_cycle():
         if os.path.exists(ans):
             paths = os.listdir(ans)
             print()
-            print(*paths, sep='\n')
-            print()
         else:
-            print('Неверный ввод!')
+            print(Fore.RED + 'Неверный ввод!' + Style.RESET_ALL)
             continue
 
 
