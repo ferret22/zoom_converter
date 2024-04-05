@@ -6,7 +6,7 @@ import conversion_starter
 init(autoreset=True)
 
 
-def program_cycle():
+def program_cycle() -> None:
     while True:
         ans = input('Введите путь до папки с папками записей(n - для выхода):' + Fore.GREEN + ' ')
         print(Style.RESET_ALL)

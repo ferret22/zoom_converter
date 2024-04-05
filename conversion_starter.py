@@ -4,7 +4,7 @@ import time
 from colorama import *
 
 
-def check_paths(main_path: str, paths: list[str]):
+def check_paths(main_path: str, paths: list[str]) -> list[str]:
     true_paths = []
     for path in paths:
         if os.path.isdir(main_path + '\\' + path):
@@ -13,7 +13,7 @@ def check_paths(main_path: str, paths: list[str]):
     return true_paths
 
 
-def search_dot_zoom(main_path: str, paths: list[str]):
+def search_dot_zoom(main_path: str, paths: list[str]) -> list[str]:
     true_paths = check_paths(main_path, paths)
     dot_zoom_files = []
 
@@ -32,14 +32,14 @@ def search_dot_zoom(main_path: str, paths: list[str]):
     return dot_zoom_files
 
 
-def process_exists(process_name: str):
+def process_exists(process_name: str) -> bool:
     programs = str(subprocess.check_output('tasklist'))
     if process_name in programs:
         return True
     return False
 
 
-def start_dot_zoom(main_path: str, paths: list[str]):
+def start_dot_zoom(main_path: str, paths: list[str]) -> None:
     t0 = time.time()
     process_name = 'zTscoder.exe'
     dot_zoom_files = search_dot_zoom(main_path, paths)
