@@ -36,8 +36,7 @@ def process_exists(process_name: str):
     programs = str(subprocess.check_output('tasklist'))
     if process_name in programs:
         return True
-    else:
-        return False
+    return False
 
 
 def start_dot_zoom(main_path: str, paths: list[str]):
