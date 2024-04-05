@@ -10,11 +10,6 @@ def check_paths(main_path: str, paths: list[str]):
         if os.path.isdir(main_path + '\\' + path):
             true_paths.append(main_path + '\\' + path)
 
-    print(Fore.MAGENTA + 'Список записей:' + Style.RESET_ALL)
-    for path in true_paths:
-        time.sleep(1.2)
-        print('\t' + Fore.GREEN + path + Style.RESET_ALL)
-
     return true_paths
 
 
@@ -27,6 +22,11 @@ def search_dot_zoom(main_path: str, paths: list[str]):
         for file in files:
             if file == 'double_click_to_convert_01.zoom':
                 dot_zoom_files.append(path + '\\double_click_to_convert_01.zoom')
+
+    print(Fore.MAGENTA + 'Список записей:' + Style.RESET_ALL)
+    for path in dot_zoom_files:
+        time.sleep(1.2)
+        print('\t' + Fore.GREEN + path + Style.RESET_ALL)
 
     return dot_zoom_files
 
