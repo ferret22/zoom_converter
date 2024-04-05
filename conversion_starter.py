@@ -53,13 +53,7 @@ def start_dot_zoom(main_path: str, paths: list[str]):
         print(Fore.BLUE + 'Подождите, идёт конвертация' + Style.RESET_ALL)
 
         while True:
-            if ans == 'n':
-                if process_exists(process_name):
-                    os.system('taskkill /IM ' + process_name)
-                break
-
             if process_exists(process_name):
-                ans = input('Введите ' + Fore.RED + 'n' + Style.RESET_ALL + ', чтобы остановить программу: ')
                 continue
             else:
                 if len(dot_zoom_files) > 0:
