@@ -25,8 +25,9 @@ def search_dot_zoom(main_path: str, paths: list[str]):
 
     print(Fore.MAGENTA + 'Список записей:' + Style.RESET_ALL)
     for path in dot_zoom_files:
-        time.sleep(1.2)
+        time.sleep(0.2)
         print('\t' + Fore.GREEN + path + Style.RESET_ALL)
+    print(f'Общее число записей: {len(dot_zoom_files)}')
 
     return dot_zoom_files
 
@@ -43,20 +44,29 @@ def start_dot_zoom(main_path: str, paths: list[str]):
     t0 = time.process_time()
     process_name = 'zTscoder.exe'
     dot_zoom_files = search_dot_zoom(main_path, paths)
-    os.startfile(dot_zoom_files.pop())
 
     print()
-    print(Fore.BLUE + 'Подождите, идёт конвертация' + Style.RESET_ALL)
+    ans = input('Список записей для конвертации сформирован. Продолжить?(n - нет):' + Fore.GREEN + ' ')
+    print(Style.RESET_ALL)
 
-    while True:
-        if process_exists(process_name):
-            continue
-        else:
-            if len(dot_zoom_files) > 0:
-                os.startfile(dot_zoom_files.pop())
-            else:
-                print(Fore.GREEN + 'Конвертация завершена!' + Style.RESET_ALL)
+    if ans != 'n':
+        print(Fore.BLUE + 'Подождите, идёт конвертация' + Style.RESET_ALL)
+
+        while True:
+            if ans == 'n':
+                if process_exists(process_name):
+                    os.system('taskkill /IM ' + process_name)
                 break
+
+            if process_exists(process_name):
+                ans = input('Введите ' + Fore.RED + 'n' + Style.RESET_ALL + ', чтобы остановить программу: ')
+                continue
+            else:
+                if len(dot_zoom_files) > 0:
+                    os.startfile(dot_zoom_files.pop())
+                else:
+                    print(Fore.GREEN + 'Конвертация завершена!' + Style.RESET_ALL)
+                    break
 
     t1 = time.process_time()
     print(Fore.BLUE + f'Затрачено времени: {t1 - t0} сек.' + Style.RESET_ALL)
