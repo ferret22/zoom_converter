@@ -41,7 +41,7 @@ def process_exists(process_name: str):
 
 
 def start_dot_zoom(main_path: str, paths: list[str]):
-    t0 = time.process_time()
+    t0 = time.time()
     process_name = 'zTscoder.exe'
     dot_zoom_files = search_dot_zoom(main_path, paths)
 
@@ -68,5 +68,5 @@ def start_dot_zoom(main_path: str, paths: list[str]):
                     print(Fore.GREEN + 'Конвертация завершена!' + Style.RESET_ALL)
                     break
 
-    t1 = time.process_time()
+    t1 = time.time()
     print(Fore.BLUE + f'Затрачено времени: {t1 - t0} сек.' + Style.RESET_ALL)
