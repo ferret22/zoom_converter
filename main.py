@@ -12,7 +12,7 @@ def program_cycle():
         print(Style.RESET_ALL)
         if ans == 'n':
             print('До свидания!')
-            input()
+            input('Введите <Enter> для закрытия программы: ')
             break
 
         if os.path.exists(ans):
