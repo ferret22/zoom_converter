@@ -56,6 +56,7 @@ def start_dot_zoom(main_path: str, paths: list[str]) -> None:
                 continue
             else:
                 if len(dot_zoom_files) > 0:
+                    print(Fore.GREEN + f'\tОсталось записей: {len(dot_zoom_files)}' + Style.RESET_ALL)
                     os.startfile(dot_zoom_files.pop())
                 else:
                     print(Fore.GREEN + 'Конвертация завершена!' + Style.RESET_ALL)
