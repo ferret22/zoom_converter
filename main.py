@@ -1,4 +1,5 @@
 import os
+import tkinter as tk
 from colorama import *
 import conversion_starter
 
@@ -6,7 +7,19 @@ import conversion_starter
 init(autoreset=True)
 
 
+def get_screen_rect() -> tuple[int, int]:
+    root = tk.Tk()
+    width = root.winfo_screenwidth()
+    height = root.winfo_screenheight()
+    root.destroy()
+
+    return width, height
+
+
 def program_cycle() -> None:
+    width, height = get_screen_rect()
+    os.system(f'mode con: cols={int(width // 4.55)} lines={int(height // 9.6)}')
+
     while True:
         ans = input('Введите путь до папки с папками записей(n - для выхода):' + Fore.GREEN + ' ')
         print(Style.RESET_ALL)
