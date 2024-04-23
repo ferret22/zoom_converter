@@ -39,8 +39,32 @@ def process_exists(process_name: str) -> bool:
     return False
 
 
+def calc_time(t0: float, t1: float) -> tuple[int, int, int]:
+    t = t1 - t0
+
+    hours = 0
+    minutes = 0
+    seconds = round(t)
+
+    if int(t) >= 60:
+        minutes_int = int(t // 60)
+        minutes_fl = t / 60
+        seconds = round((minutes_fl - minutes_int) * 60)
+
+        minutes = minutes_int
+
+        if minutes_int >= 60:
+            hours_int = int(minutes_fl // 60)
+            hours_fl = minutes_fl / 60
+            minutes = round((hours_fl - hours_int) * 60)
+
+            hours = hours_int
+
+    return hours, minutes, seconds
+
+
 def start_dot_zoom(main_path: str, paths: list[str]) -> None:
-    t0 = time.time()
+    t0 = float(time.time())
     process_name = 'zTscoder.exe'
     dot_zoom_files = search_dot_zoom(main_path, paths)
 
@@ -62,5 +86,6 @@ def start_dot_zoom(main_path: str, paths: list[str]) -> None:
                     print(Fore.GREEN + 'Конвертация завершена!' + Style.RESET_ALL)
                     break
 
-    t1 = time.time()
-    print(Fore.BLUE + f'Затрачено времени: {t1 - t0} сек.' + Style.RESET_ALL)
+    t1 = float(time.time())
+    times = calc_time(t0, t1)
+    print(Fore.BLUE + f'Затрачено времени: {times[0]} ч. {times[1]} мин. {times[2]} сек.' + Style.RESET_ALL)
