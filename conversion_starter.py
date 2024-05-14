@@ -4,6 +4,11 @@ import time
 from colorama import *
 
 
+dot_zoom_file = 'double_click_to_convert_01.zoom'
+error_log_file = 'xcode_error.log'
+process_name = 'zTscoder.exe'
+
+
 def check_paths(main_path: str, paths: list[str]) -> list[str]:
     true_paths = []
     for path in paths:
@@ -13,15 +18,17 @@ def check_paths(main_path: str, paths: list[str]) -> list[str]:
     return true_paths
 
 
-def search_dot_zoom(main_path: str, paths: list[str]) -> list[str]:
+def search_dot_zoom(main_path: str, paths: list[str]) -> (list[str], list[str]):
     true_paths = check_paths(main_path, paths)
     dot_zoom_files = []
+    zoom_paths = []
 
     for path in true_paths:
         files = os.listdir(path)
         for file in files:
-            if file == 'double_click_to_convert_01.zoom':
-                dot_zoom_files.append(path + '\\double_click_to_convert_01.zoom')
+            if file == dot_zoom_file:
+                dot_zoom_files.append(path + '\\' + dot_zoom_file)
+                zoom_paths.append(path)
 
     print(Fore.MAGENTA + 'Список записей:' + Style.RESET_ALL)
     for path in dot_zoom_files:
@@ -29,10 +36,21 @@ def search_dot_zoom(main_path: str, paths: list[str]) -> list[str]:
         print('\t' + Fore.GREEN + path + Style.RESET_ALL)
     print(f'Общее число записей: {len(dot_zoom_files)}')
 
-    return dot_zoom_files
+    return dot_zoom_files, zoom_paths
 
 
-def process_exists(process_name: str) -> bool:
+def check_error_files(zoom_paths: list[str]) -> list[str]:
+    error_paths = []
+
+    for path in zoom_paths:
+        files = os.listdir(path)
+        if error_log_file in files:
+            error_paths.append(path + '\\' + dot_zoom_file)
+
+    return error_paths
+
+
+def process_exists() -> bool:
     programs = str(subprocess.check_output('tasklist'))
     if process_name in programs:
         return True
@@ -65,8 +83,8 @@ def calc_time(t0: float, t1: float) -> tuple[int, int, int]:
 
 def start_dot_zoom(main_path: str, paths: list[str]) -> None:
     t0 = float(time.time())
-    process_name = 'zTscoder.exe'
-    dot_zoom_files = search_dot_zoom(main_path, paths)
+    dot_zoom_files, zoom_paths = search_dot_zoom(main_path, paths)
+    error_zoom_files = check_error_files(zoom_paths)
 
     print()
     ans = input('Список записей для конвертации сформирован. Продолжить?(n - нет):' + Fore.GREEN + ' ')
@@ -76,16 +94,23 @@ def start_dot_zoom(main_path: str, paths: list[str]) -> None:
         print(Fore.BLUE + 'Подождите, идёт конвертация' + Style.RESET_ALL)
 
         while True:
-            if process_exists(process_name):
+            if process_exists():
                 continue
             else:
                 if len(dot_zoom_files) > 0:
                     print(Fore.GREEN + f'\tОсталось записей: {len(dot_zoom_files)}' + Style.RESET_ALL)
-                    os.startfile(dot_zoom_files.pop())
+                    zoom_file = dot_zoom_files.pop()
+
+                    if zoom_file in error_zoom_files:
+                        print(Fore.RED + f'\nЗапись:\n{zoom_file}\nПОВРЕЖДЕНА!!!\n'
+                                         f'ВОЗМОЖНЫ ПРОБЛЕМЫ С ИЗОБРАЖЕНИЕМ ИЛИ(И) ЗВУКОМ ПОСЛЕ КОНВЕРТАЦИИ!\n'
+                              + Style.RESET_ALL)
+
+                    os.startfile(zoom_file)
                 else:
-                    print(Fore.GREEN + 'Конвертация завершена!' + Style.RESET_ALL)
+                    print(Fore.GREEN + 'Конвертация завершена!' + Style.RESET_ALL + '\n')
                     break
 
     t1 = float(time.time())
     times = calc_time(t0, t1)
-    print(Fore.BLUE + f'Затрачено времени: {times[0]} ч. {times[1]} мин. {times[2]} сек.' + Style.RESET_ALL)
+    print(Fore.BLUE + f'Затрачено времени: {times[0]} ч. {times[1]} мин. {times[2]} сек.' + Style.RESET_ALL + '\n')
