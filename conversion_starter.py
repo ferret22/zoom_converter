@@ -15,7 +15,7 @@ def check_paths(main_path: str, paths: list[str]) -> list[str]:
     return true_paths
 
 
-def search_dot_zoom(main_path: str, paths: list[str]) -> (list[str], list[str]):
+def search_dot_zoom(main_path: str, paths: list[str]) -> tuple[list[str], list[str]]:
     true_paths = check_paths(main_path, paths)
     dot_zoom_files = []
     zoom_paths = []
