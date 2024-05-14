@@ -2,11 +2,8 @@ import os
 import subprocess
 import time
 from colorama import *
-
-
-dot_zoom_file = 'double_click_to_convert_01.zoom'
-error_log_file = 'xcode_error.log'
-process_name = 'zTscoder.exe'
+import program_files
+from error_writer import ErrorWriter
 
 
 def check_paths(main_path: str, paths: list[str]) -> list[str]:
@@ -26,9 +23,10 @@ def search_dot_zoom(main_path: str, paths: list[str]) -> (list[str], list[str]):
     for path in true_paths:
         files = os.listdir(path)
         for file in files:
-            if file == dot_zoom_file:
-                dot_zoom_files.append(path + '\\' + dot_zoom_file)
+            if file == program_files.dot_zoom_file:
                 zoom_paths.append(path)
+                if ErrorWriter.check_error_path(path + '\\' + program_files.dot_zoom_file):
+                    dot_zoom_files.append(path + '\\' + program_files.dot_zoom_file)
 
     print(Fore.MAGENTA + 'Список записей:' + Style.RESET_ALL)
     for path in dot_zoom_files:
@@ -44,15 +42,16 @@ def check_error_files(zoom_paths: list[str]) -> list[str]:
 
     for path in zoom_paths:
         files = os.listdir(path)
-        if error_log_file in files:
-            error_paths.append(path + '\\' + dot_zoom_file)
+        if program_files.error_log_file in files:
+            if ErrorWriter.write_error_path(path + '\\' + program_files.dot_zoom_file):
+                error_paths.append(path + '\\' + program_files.dot_zoom_file)
 
     return error_paths
 
 
 def process_exists() -> bool:
     programs = str(subprocess.check_output('tasklist'))
-    if process_name in programs:
+    if program_files.process_name in programs:
         return True
     return False
 

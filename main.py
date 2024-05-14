@@ -2,6 +2,7 @@ import os
 import tkinter as tk
 from colorama import *
 import conversion_starter
+from error_writer import ErrorWriter
 
 
 init(autoreset=True)
@@ -37,4 +38,5 @@ def program_cycle() -> None:
 
 
 if __name__ == '__main__':
+    ErrorWriter.check_ers()
     program_cycle()
