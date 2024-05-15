@@ -35,6 +35,12 @@ class FileWriter:
             set_log.write(lang)
         set_log.close()
 
+    @staticmethod
+    def write_lang(lang: str) -> None:
+        with open(program_files.set_log, 'w') as set_log:
+            set_log.write(lang)
+        set_log.close()
+
     def write_error_path(self, error_path: str) -> bool:
         paths = self.read_file(program_files.ers_log)
 

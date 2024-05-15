@@ -7,6 +7,9 @@ from language import Language
 
 
 init(autoreset=True)
+writer = FileWriter()
+writer.check_ers()
+lang = Language()
 
 
 def get_screen_rect() -> tuple[int, int]:
@@ -16,6 +19,26 @@ def get_screen_rect() -> tuple[int, int]:
     root.destroy()
 
     return width, height
+
+
+def settings(words: list[str]) -> list[str]:
+    while True:
+        ans = input(f'{words[17]}' + Fore.GREEN + ' ')
+        print(Style.RESET_ALL)
+        try:
+            if ans == 'n':
+                return lang.set_language()
+
+            match int(ans):
+                case 1:
+                    writer.write_lang('ru')
+                case 2:
+                    writer.write_lang('en')
+        except ValueError:
+            print(Fore.RED + f'{words[3]}' + Style.RESET_ALL)
+            continue
+
+        return lang.set_language()
 
 
 def program_cycle(words: list[str]) -> None:
@@ -29,8 +52,9 @@ def program_cycle(words: list[str]) -> None:
             print(f'{words[1]}')
             input(f'{words[2]} ')
             break
-
-        if os.path.exists(ans):
+        elif ans == 's':
+            words = settings(words)
+        elif os.path.exists(ans):
             paths = os.listdir(ans)
             conversion_starter.start_dot_zoom(ans, paths, words)
         else:
@@ -39,7 +63,4 @@ def program_cycle(words: list[str]) -> None:
 
 
 if __name__ == '__main__':
-    writer = FileWriter()
-    writer.check_ers()
-    lang = Language()
     program_cycle(lang.set_language())
