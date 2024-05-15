@@ -3,7 +3,10 @@ import subprocess
 import time
 from colorama import *
 import program_files
-from error_writer import ErrorWriter
+from file_writer import FileWriter
+
+
+writer = FileWriter()
 
 
 def check_paths(main_path: str, paths: list[str]) -> list[str]:
@@ -15,7 +18,7 @@ def check_paths(main_path: str, paths: list[str]) -> list[str]:
     return true_paths
 
 
-def search_dot_zoom(main_path: str, paths: list[str]) -> tuple[list[str], list[str]]:
+def search_dot_zoom(main_path: str, paths: list[str], words: list[str]) -> tuple[list[str], list[str]]:
     true_paths = check_paths(main_path, paths)
     dot_zoom_files = []
     zoom_paths = []
@@ -25,14 +28,14 @@ def search_dot_zoom(main_path: str, paths: list[str]) -> tuple[list[str], list[s
         for file in files:
             if file == program_files.dot_zoom_file:
                 zoom_paths.append(path)
-                if ErrorWriter.check_error_path(path + '\\' + program_files.dot_zoom_file):
+                if writer.check_error_path(path + '\\' + program_files.dot_zoom_file):
                     dot_zoom_files.append(path + '\\' + program_files.dot_zoom_file)
 
-    print(Fore.MAGENTA + 'Список записей:' + Style.RESET_ALL)
+    print(Fore.MAGENTA + f'{words[4]}' + Style.RESET_ALL)
     for path in dot_zoom_files:
         time.sleep(0.2)
         print('\t' + Fore.GREEN + path + Style.RESET_ALL)
-    print(f'Общее число записей: {len(dot_zoom_files)}')
+    print(f'{words[5]} {len(dot_zoom_files)}')
 
     return dot_zoom_files, zoom_paths
 
@@ -43,7 +46,7 @@ def check_error_files(zoom_paths: list[str]) -> list[str]:
     for path in zoom_paths:
         files = os.listdir(path)
         if program_files.error_log_file in files:
-            if ErrorWriter.write_error_path(path + '\\' + program_files.dot_zoom_file):
+            if writer.write_error_path(path + '\\' + program_files.dot_zoom_file):
                 error_paths.append(path + '\\' + program_files.dot_zoom_file)
 
     return error_paths
@@ -80,36 +83,35 @@ def calc_time(t0: float, t1: float) -> tuple[int, int, int]:
     return hours, minutes, seconds
 
 
-def start_dot_zoom(main_path: str, paths: list[str]) -> None:
+def start_dot_zoom(main_path: str, paths: list[str], words: list[str]) -> None:
     t0 = float(time.time())
-    dot_zoom_files, zoom_paths = search_dot_zoom(main_path, paths)
+    dot_zoom_files, zoom_paths = search_dot_zoom(main_path, paths, words)
     error_zoom_files = check_error_files(zoom_paths)
 
     print()
-    ans = input('Список записей для конвертации сформирован. Продолжить?(n - нет):' + Fore.GREEN + ' ')
+    ans = input(f'{words[6]}' + Fore.GREEN + ' ')
     print(Style.RESET_ALL)
 
     if ans != 'n':
-        print(Fore.BLUE + 'Подождите, идёт конвертация' + Style.RESET_ALL)
+        print(Fore.BLUE + f'{words[7]}' + Style.RESET_ALL)
 
         while True:
             if process_exists():
                 continue
             else:
                 if len(dot_zoom_files) > 0:
-                    print(Fore.GREEN + f'\tОсталось записей: {len(dot_zoom_files)}' + Style.RESET_ALL)
+                    print(Fore.GREEN + f'\t{words[8]} {len(dot_zoom_files)}' + Style.RESET_ALL)
                     zoom_file = dot_zoom_files.pop()
 
                     if zoom_file in error_zoom_files:
-                        print(Fore.RED + f'\nЗапись:\n{zoom_file}\nПОВРЕЖДЕНА!!!\n'
-                                         f'ВОЗМОЖНЫ ПРОБЛЕМЫ С ИЗОБРАЖЕНИЕМ ИЛИ(И) ЗВУКОМ ПОСЛЕ КОНВЕРТАЦИИ!\n'
-                              + Style.RESET_ALL)
+                        print(Fore.RED + f'\n{words[9]}\n{zoom_file}\n{words[10]}\n{words[11]}\n' + Style.RESET_ALL)
 
                     os.startfile(zoom_file)
                 else:
-                    print(Fore.GREEN + 'Конвертация завершена!' + Style.RESET_ALL + '\n')
+                    print(Fore.GREEN + f'{words[12]}' + Style.RESET_ALL + '\n')
                     break
 
     t1 = float(time.time())
     times = calc_time(t0, t1)
-    print(Fore.BLUE + f'Затрачено времени: {times[0]} ч. {times[1]} мин. {times[2]} сек.' + Style.RESET_ALL + '\n')
+    print(Fore.BLUE + f'{words[13]} {times[0]} {words[14]} {times[1]} {words[15]} {times[2]} {words[16]}'
+          + Style.RESET_ALL + '\n')
